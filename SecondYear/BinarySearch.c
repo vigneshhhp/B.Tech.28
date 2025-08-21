@@ -1,42 +1,47 @@
 #include <stdio.h>
-int binarySearch(int arr[], int size, int key) {
-    int low = 0,high = size - 1;
-    // Keep searching while the low pointer is less than or equal to the high pointer
+#include <time.h>
+
+int binarySearchRefined(int arr[], int size, int key) {
+    clock_t start, end;
+    double time_taken;
+    int low = 0, high = size - 1;
+    int found_index = -1; // Default to "not found"
+
+    start = clock();
+
     while (low <= high) {
-        // Calculate the middle index to prevent overflow
         int mid = low + (high - low) / 2;
-
-        // If the key is found at the middle, return its index
         if (arr[mid] == key) {
-            return mid;
+            found_index = mid; // Store the index
+            break;             // Exit the loop
         }
-
-        // If the key is smaller than the middle element, search in the left half
         if (arr[mid] > key) {
             high = mid - 1;
-        }
-        // If the key is larger than the middle element, search in the right half
-        else { // arr[mid] < key
+        } else {
             low = mid + 1;
         }
     }
 
-    // If the loop finishes, the key was not found in the array
-    return -1;
+    // This section is now ALWAYS reached
+    end = clock();
+    time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("\nSearch completed in: %f seconds", time_taken);
+
+    return found_index; // Return the result
 }
 
+// The main function can remain the same
 int main() {
-    int arr[] = {2, 5, 8, 12, 16, 23, 38, 56, 72, 91}; 
+    int arr[] = {2, 5, 8, 12, 16, 23, 38, 56, 72, 91};
     int size = sizeof(arr) / sizeof(arr[0]);
-    int key = 23;
+    int key = 56;
 
-    int result = binarySearch(arr, size, key);
+    int result = binarySearchRefined(arr, size, key);
 
     if (result != -1) {
-        printf("Element %d found at index %d.\n", key, result);
+        printf("\nElement %d found at index %d.\n", key, result);
     } else {
-        printf("Element %d not found in the array.\n", key);
+        printf("\nElement %d not found in the array.\n", key);
     }
-
     return 0;
 }
